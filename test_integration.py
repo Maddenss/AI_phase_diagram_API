@@ -1,11 +1,8 @@
-# Запуск pytest -s test_integration.py
-
 from fastapi.testclient import TestClient
 from main import app
 import pandas as pd
 from main import load_data, load_model
 from sklearn.model_selection import StratifiedKFold
-import numpy as np
 import os
 
 # Интеграционные тесты для эндпоинтов
