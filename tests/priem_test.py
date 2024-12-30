@@ -22,7 +22,7 @@ def test_predict():
         "Xafm": [0.5, 0.6],
     }
     test_df = pd.DataFrame(test_data)
-    test_file = "test_data.csv"
+    test_file = "Main_Data.csv"
     test_df.to_csv(test_file, index=False)
 
     with open(test_file, "rb") as f:
