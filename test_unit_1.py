@@ -1,7 +1,5 @@
 import pytest
-import pandas as pd
-from main import load_data, load_model
-import numpy as np
+from main import load_model
 
 MODEL_PATH = "xgboost_model.pkl"
 
@@ -26,4 +24,3 @@ def test_load_model(loaded_model):
     # Выводим информацию о модели
     print("\nМодель успешно загружена:")
     print(f"Тип модели: {type(model)}")
-
