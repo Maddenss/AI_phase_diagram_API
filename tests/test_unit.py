@@ -8,7 +8,7 @@ def test_load_data():
     Проверка корректности загрузки данных.
     """
     # Загружаем данные
-    X, y = load_data("Main_Data.csv")
+    X, y = load_data("main_data.csv")
     
     # Проверяем, что X — это DataFrame, а y — Series
     assert isinstance(X, pd.DataFrame)
@@ -53,7 +53,7 @@ def test_predict():
     """
     # Загружаем модель и данные
     model = load_model("xgboost_model.pkl")
-    X, _ = load_data("Main_Data.csv")
+    X, _ = load_data("main_data.csv")
     
     # Получаем предсказания
     predictions = model.predict(X)
