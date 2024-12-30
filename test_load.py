@@ -21,7 +21,7 @@ def test_stability_with_multiple_requests():
         finish = time.thread_time()
         time_response = finish-start
         time_list.append(time_response)
-        assert response.status_code == 200        
+        assert response.status_code == 200
     avg_time = mean(time_list)
 
     # Выводим информацию о тесте
