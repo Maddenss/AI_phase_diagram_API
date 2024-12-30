@@ -30,6 +30,7 @@ def test_load_data(loaded_data):
     assert set(y.unique()).issubset({0, 1})
     
     # Выводим информацию о данных
+    print("\Модульный тест 2.")
     print("\nДанные успешно загружены:")
     print(f"X (признаки): {X.shape[0]} строк, {X.shape[1]} столбцов")
     print(f"y (целевая переменная): {len(y)} значений")
