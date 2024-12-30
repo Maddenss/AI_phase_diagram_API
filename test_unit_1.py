@@ -22,6 +22,6 @@ def test_load_model(loaded_model):
     assert hasattr(model, "predict")
     
     # Выводим информацию о модели
-    print("\Модульный тест 1:")
-    print("\nМодель успешно загружена.")
+    print("\nМодульный тест 1:")
+    print("Модель успешно загружена.")
     print(f"Тип модели: {type(model)}")
