@@ -6,6 +6,7 @@ import os
 # Создаем тестовый клиент
 client = TestClient(app)
 
+
 # Тест для проверки обработки предсказаний
 def test_predict():
     # Создаем тестовый CSV файл
@@ -31,11 +32,13 @@ def test_predict():
     predictions = response.json()
     assert len(predictions) == 2
     assert "y_predict" in predictions[0]
-    assert "predict_proba" in predictions[0]  
+    assert "predict_proba" in predictions[0]
 
     # Удаляем тестовый файл
     os.remove(test_file)
     print("\nПриемочный тест пройден: предсказания модели совпали.")
+
+
 # Тестирование некорректного ввода
 def test_predict_invalid_file():
     response = client.post("/predict/", files={"file": ("test.txt", b"Invalid content", "text/plain")})
