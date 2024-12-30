@@ -27,6 +27,10 @@ jobs:
       - name: Install dependencies
         run: |
           pip install -r requirements.txt  # Устанавливаем все зависимости из requirements.txt
+      
+      - name: Run flake8 linting
+        run: |
+          flake8 .
 
       - name: Run tests
         run: pytest -s --disable-warnings -q tests/
