@@ -4,7 +4,7 @@ from main import load_data
 import os
 
 # Указываем путь к файлу
-DATA_PATH = "tests/Main_Data.csv"
+DATA_PATH = "Main_Data.csv"
 
 @pytest.fixture
 def loaded_data():
