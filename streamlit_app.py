@@ -18,7 +18,7 @@ from sklearn.metrics import (
 
 # Пути к файлам
 MODEL_PATH = "xgboost_model.pkl"
-DATA_PATH = "Main_data.csv"
+DATA_PATH = "Main_Data.csv"
 
 # Загрузка данных
 @st.cache_data
