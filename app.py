@@ -1,145 +1,111 @@
 import streamlit as st
+import requests
 import pandas as pd
-import numpy as np
-import pickle
-import shap
 import matplotlib.pyplot as plt
-from sklearn.model_selection import train_test_split, StratifiedKFold
-from sklearn.metrics import (
-    accuracy_score,
-    precision_score,
-    recall_score,
-    f1_score,
-    roc_auc_score,
-    roc_curve,
-    confusion_matrix,
-)
-from xgboost import XGBClassifier
 import io
+from PIL import Image
 
-# Пути к файлам
-MODEL_PATH = "xgboost_model.pkl"
-DATA_PATH = "Main_data.csv"
+# URL API (FastAPI)
+API_URL = "http://fastapi:8000"
 
+# Заголовок приложения
+st.title("AI_phase_diagram_API")
 
-# Загрузка данных
-@st.cache_data
-def load_data(data_path):
-    data = pd.read_csv(data_path)
-    X = data[["T", "E", "C", "FM", "Xfm", "AFM", "Xafm"]]
-    y = data["h"]
-    return X, y
-
-
-# Загрузка модели
-@st.cache_data
-def load_model(model_path):
-    with open(model_path, "rb") as file:
-        return pickle.load(file)
-
-
-# Инициализация
-X, y = load_data(DATA_PATH)
-model = load_model(MODEL_PATH)
-X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3, random_state=42)
-
-# Главный интерфейс
-st.title("Модель прогнозирования (XGBoost)")
-
-# Метрики модели
+# Раздел для отображения метрик модели
 st.header("Метрики модели")
 if st.button("Рассчитать метрики"):
-    y_pred = model.predict(X_test)
-    y_pred_prob = model.predict_proba(X_test)[:, 1]
+    response = requests.get(f"{API_URL}/metrics/")
+    if response.status_code == 200:
+        st.json(response.json())
+    else:
+        st.error("Ошибка при получении метрик")
 
-    metrics = {
-        "Accuracy": accuracy_score(y_test, y_pred),
-        "Precision (Class 0)": precision_score(y_test, y_pred, pos_label=0),
-        "Precision (Class 1)": precision_score(y_test, y_pred, pos_label=1),
-        "Recall (Class 0)": recall_score(y_test, y_pred, pos_label=0),
-        "Recall (Class 1)": recall_score(y_test, y_pred, pos_label=1),
-        "F1-score (Class 0)": f1_score(y_test, y_pred, pos_label=0),
-        "F1-score (Class 1)": f1_score(y_test, y_pred, pos_label=1),
-        "ROC-AUC": roc_auc_score(y_test, y_pred_prob),
-    }
-    st.json(metrics)
-
-# ROC-кривая
+# Раздел для построения ROC-кривой
 st.header("ROC-кривая")
 if st.button("Построить ROC-кривую"):
-    y_pred_prob = model.predict_proba(X_test)[:, 1]
-    fpr, tpr, _ = roc_curve(y_test, y_pred_prob)
-    roc_auc = roc_auc_score(y_test, y_pred_prob)
+    response = requests.get(f"{API_URL}/roc_curve/")
+    if response.status_code == 200:
+        image = Image.open(io.BytesIO(response.content))
+        st.image(image, caption="ROC Curve", use_container_width=True)
+    else:
+        st.error("Ошибка при построении ROC-кривой")
 
-    plt.figure()
-    plt.plot(fpr, tpr, color="blue", lw=2, label=f"ROC curve (area = {roc_auc:.2f})")
-    plt.plot([0, 1], [0, 1], color="gray", linestyle="--")
-    plt.xlabel("False Positive Rate")
-    plt.ylabel("True Positive Rate")
-    plt.title("ROC Curve")
-    plt.legend(loc="lower right")
-    st.pyplot(plt)
-
-# Кросс-валидация
+# Раздел для кросс-валидации
 st.header("Кросс-валидация")
-if st.button("Выполнить кросс-валидацию"):
-    kfold = StratifiedKFold(n_splits=5, shuffle=True, random_state=42)
-    results = []
+if st.button("Запустить кросс-валидацию"):
+    response = requests.get(f"{API_URL}/cross_validation/")
+    if response.status_code == 200:
+        results = response.json()["results"]
+        mean_roc_auc = response.json()["mean_roc_auc"]
 
-    for fold, (train_idx, test_idx) in enumerate(kfold.split(X, y), start=1):
-        X_train_fold, X_test_fold = X.iloc[train_idx], X.iloc[test_idx]
-        y_train_fold, y_test_fold = y.iloc[train_idx], y.iloc[test_idx]
+        st.subheader("Результаты по каждому фолду")
+        for result in results:
+            st.write(f"Fold {result['fold']}:")
+            st.write(f"ROC-AUC: {result['roc_auc']:.4f}")
+            cm_df = pd.DataFrame(
+                result["confusion_matrix"],
+                index=["Actual 0", "Actual 1"],
+                columns=["Predicted 0", "Predicted 1"],
+            )
+            st.table(cm_df)
 
-        model.fit(X_train_fold, y_train_fold)
-        y_pred_fold = model.predict(X_test_fold)
-        roc_auc = roc_auc_score(y_test_fold, model.predict_proba(X_test_fold)[:, 1])
-        cm = confusion_matrix(y_test_fold, y_pred_fold)
+        st.subheader(f"Средний ROC-AUC: {mean_roc_auc:.4f}")
+    else:
+        st.error("Ошибка при выполнении кросс-валидации")
 
-        results.append({
-            "Fold": fold,
-            "Confusion Matrix": cm.tolist(),
-            "ROC-AUC": roc_auc,
-        })
+# Раздел для построения графика ROC-AUC для кросс-валидации
+st.header("ROC-AUC для кросс-валидации")
+if st.button("Построить график ROC-AUC"):
+    response = requests.get(f"{API_URL}/cross_validation_roc_auc/")
+    if response.status_code == 200:
+        image = Image.open(io.BytesIO(response.content))
+        st.image(image, caption="5-fold Cross-Validation ROC-AUC", use_container_width=True)
+    else:
+        st.error("Ошибка при построении графика ROC-AUC")
 
-    st.json(results)
-
-# Важность признаков
+# Раздел для анализа важности признаков
 st.header("Важность признаков")
 if st.button("Показать важность признаков"):
-    model.fit(X, y)
-    explainer = shap.TreeExplainer(model)
-    shap_values = explainer.shap_values(X)
+    response = requests.get(f"{API_URL}/feature_importance/")
+    if response.status_code == 200:
+        image = Image.open(io.BytesIO(response.content))
+        st.image(image, caption="Feature Importance", use_container_width=True)
+    else:
+        st.error("Ошибка при анализе важности признаков")
 
-    shap.summary_plot(shap_values, X, plot_type="bar", show=False)
-    st.pyplot(plt)
-
-# SHAP-анализ
+# Раздел для SHAP-анализа
 st.header("SHAP-анализ")
 if st.button("Построить SHAP-анализ"):
-    explainer = shap.TreeExplainer(model)
-    shap_values = explainer.shap_values(X_train)
+    response = requests.get(f"{API_URL}/shap_analysis/")
+    if response.status_code == 200:
+        image = Image.open(io.BytesIO(response.content))
+        st.image(image, caption="SHAP Analysis", use_container_width=True)
+    else:
+        st.error("Ошибка при построении SHAP-анализа")
 
-    shap.summary_plot(shap_values, X_train, show=False)
-    st.pyplot(plt)
-
-# Предсказания
+# Раздел для предсказаний
 st.header("Предсказания")
-uploaded_file = st.file_uploader("Загрузите файл CSV для предсказаний", type="csv")
-if uploaded_file is not None:
-    EXPECTED_COLUMNS = ["T", "E", "C", "FM", "Xfm", "AFM", "Xafm"]
+uploaded_file = st.file_uploader("Загрузите файл CSV", type="csv")
+if uploaded_file:
     try:
-        data = pd.read_csv(uploaded_file)
-        if not all(col in data.columns for col in EXPECTED_COLUMNS):
-            st.error(f"Отсутствуют необходимые колонки: {', '.join(EXPECTED_COLUMNS)}")
-        else:
-            predictions = model.predict(data[EXPECTED_COLUMNS])
-            prediction_probs = model.predict_proba(data[EXPECTED_COLUMNS])[:, 1]
+        # Отправка файла на API
+        files = {"file": uploaded_file}
+        response = requests.post(f"{API_URL}/predict/", files=files)
 
-            results = pd.DataFrame({
-                "Sample": data.index,
-                "Prediction": predictions,
-                "Probability": prediction_probs,
-            })
-            st.write(results)
+        if response.status_code == 200:
+            # Преобразование результата в DataFrame
+            data = pd.DataFrame(response.json())
+            st.write(data)
+
+            # Кнопка для скачивания результатов
+            csv = data.to_csv(index=False).encode("utf-8")
+            st.download_button(
+                label="Скачать результаты",
+                data=csv,
+                file_name="processed_results.csv",
+                mime="text/csv",
+            )
+        else:
+            st.error(f"Ошибка при обработке файла: {response.json()['detail']}")
     except Exception as e:
         st.error(f"Ошибка обработки файла: {str(e)}")
