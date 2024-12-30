@@ -29,7 +29,7 @@ jobs:
           pip install -r requirements.txt  # Устанавливаем все зависимости из requirements.txt
 
       - name: Run tests
-        run: pytest --disable-warnings -q tests/
+        run: pytest -s --disable-warnings -q tests/
 
 
       - name: Upload test results (optional)
