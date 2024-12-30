@@ -1,7 +1,6 @@
 import json
 import numpy as np
 from main import load_data, load_model
-import os
 
 def test_regression_predictions():
     """
