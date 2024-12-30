@@ -58,7 +58,7 @@ if st.button("Построить график ROC-AUC"):
     response = requests.get(f"{API_URL}/cross_validation_roc_auc/")
     if response.status_code == 200:
         image = Image.open(io.BytesIO(response.content))
-        st.image(image, caption="5-fold Cross-Validation ROC-AUC", 
+        st.image(image, caption="5-fold Cross-Validation ROC-AUC",
                  use_container_width=True)
     else:
         st.error("Ошибка при построении графика ROC-AUC")
@@ -106,6 +106,6 @@ if uploaded_file:
                 mime="text/csv",
             )
         else:
-            st.error(f"Ошибка при обработке файла: {response.json()['detail']}")
+            st.error(f"Ошибка обработки файла: {response.json()['detail']}")
     except Exception as e:
         st.error(f"Ошибка обработки файла: {str(e)}")
