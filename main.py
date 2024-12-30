@@ -83,6 +83,7 @@ async def get_roc_curve():
 
     buf = io.BytesIO()
     plt.savefig(buf, format="png")
+    plt.close()
     buf.seek(0)
     return Response(content=buf.getvalue(), media_type="image/png")
 
@@ -156,6 +157,7 @@ async def get_cross_validation_roc_auc():
 
     buf = io.BytesIO()
     plt.savefig(buf, format="png")
+    plt.close()
     buf.seek(0)
     return Response(content=buf.getvalue(), media_type="image/png")
 
@@ -174,6 +176,7 @@ async def get_feature_importance():
 
     buf = io.BytesIO()
     plt.savefig(buf, format="png")
+    plt.close()
     buf.seek(0)
     return Response(content=buf.getvalue(), media_type="image/png")
 
@@ -191,6 +194,7 @@ async def get_shap_analysis():
 
     buf = io.BytesIO()
     plt.savefig(buf, format="png")
+    plt.close()
     buf.seek(0)
     return Response(content=buf.getvalue(), media_type="image/png")
 
