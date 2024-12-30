@@ -58,7 +58,8 @@ if st.button("Построить график ROC-AUC"):
     response = requests.get(f"{API_URL}/cross_validation_roc_auc/")
     if response.status_code == 200:
         image = Image.open(io.BytesIO(response.content))
-        st.image(image, caption="5-fold Cross-Validation ROC-AUC", use_container_width=True)
+        st.image(image, caption="5-fold Cross-Validation ROC-AUC", 
+                 use_container_width=True)
     else:
         st.error("Ошибка при построении графика ROC-AUC")
 
