@@ -1,6 +1,7 @@
 import json
 import numpy as np
 from main import load_data, load_model
+import os
 
 def test_regression_predictions():
     """
@@ -8,7 +9,7 @@ def test_regression_predictions():
     после изменений в коде.
     """
     # Загружаем данные и модель
-    X, _ = load_data("Main_Data.csv")
+    X, y = load_data("Main_Data.csv")
     model = load_model("xgboost_model.pkl")
     
     # Получаем текущие предсказания
