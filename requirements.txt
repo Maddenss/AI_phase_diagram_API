@@ -10,4 +10,3 @@ scikit-learn==1.5.2
 httpx==0.28.1
 python-multipart
 flake8
-os
