@@ -8,7 +8,7 @@ def test_load_data():
     Проверка корректности загрузки данных.
     """
     # Загружаем данные
-    X, y = load_data("main_data.csv")
+    X, y = load_data("tests/main_data.csv")
     
     # Проверяем, что X — это DataFrame, а y — Series
     assert isinstance(X, pd.DataFrame)
