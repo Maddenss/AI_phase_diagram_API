@@ -1,4 +1,3 @@
-import pytest
 from fastapi.testclient import TestClient
 from main import app
 import pandas as pd
@@ -22,7 +21,7 @@ def test_predict():
         "Xafm": [0.5, 0.6],
     }
     test_df = pd.DataFrame(test_data)
-    test_file = "Main_Data.csv"
+    test_file = "test_data.csv"
     test_df.to_csv(test_file, index=False)
 
     with open(test_file, "rb") as f:
@@ -32,7 +31,7 @@ def test_predict():
     predictions = response.json()
     assert len(predictions) == 2
     assert "y_predict" in predictions[0]
-    assert "predict_proba" in predictions[0]
+    assert "predict_proba" in predictions[0]  
 
     # Удаляем тестовый файл
     os.remove(test_file)
