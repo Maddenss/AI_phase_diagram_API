@@ -41,7 +41,7 @@ def test_model_with_various_inputs(load_model, test_input, expected):
     prediction = model.predict(test_input_np)  # Получаем предсказание
 
     # Отладочный вывод
-    print(f"Вход: {test_input}, Предсказание: {prediction}, Ожидаемое: {expected}")
+    print(f"Параметрический тест: Вход: {test_input}, Предсказание: {prediction}, Ожидаемое: {expected}")
 
     # Проверка предсказания
     assert prediction == expected, (
@@ -69,4 +69,4 @@ def test_data_fixture(test_data):
     X, y = test_data
     assert not X.empty, "Тестовые данные X пусты"
     assert not y.empty, "Тестовые данные y пусты"
-    print("Фикстура test_data загружена корректно")
+    print("Параметрический тест: Фикстура test_data загружена корректно")
