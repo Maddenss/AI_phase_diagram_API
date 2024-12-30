@@ -10,7 +10,7 @@ on:
 
 jobs:
   test:
-    runs-on: ubuntu-latest  # Используем последнюю версию Ubuntu для выполнения тестов
+    runs-on: ubuntu-24.04
 
     steps:
       - name: Checkout repository
