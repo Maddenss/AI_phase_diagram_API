@@ -4,7 +4,7 @@ from main import load_data, load_model
 import numpy as np
 import os
 
-data_path = "../Main_Data.csv"
+data_path = "Main_Data.csv"
 def test_load_data():
     """
     Проверка корректности загрузки данных.
