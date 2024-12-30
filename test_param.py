@@ -8,14 +8,12 @@ from sklearn.metrics import mean_squared_error
 MODEL_PATH = "xgboost_model.pkl"
 DATA_PATH = "Main_Data.csv"
 
-
 # Фикстура для загрузки модели
 @pytest.fixture
 def load_model():
     with open(MODEL_PATH, "rb") as f:
         model = pickle.load(f)
     return model
-
 
 # Фикстура для загрузки тестовых данных
 @pytest.fixture
@@ -25,15 +23,14 @@ def test_data():
     y = data["h"]
     return X, y
 
-
 # Параметризованный тест: проверка работы модели на разных входных данных
 @pytest.mark.parametrize(
     "test_input,expected",
     [
-        ([5.056, -0.423195, 0.095988, 0.000066, 0.099824, 0.000442, 0.558774], 1),  # Ожидаемое значение "1"
-        ([4.977, -0.430664, 0.098109, 0.000083, 0.099011, 0.000524, 0.575897], 1),
-        ([4.898, -0.438642, 0.102846, 0.000079, 0.100388, 0.000426, 0.60144], 1),
-        ([4.819, -0.447129, 0.105791, 0.000076, 0.101086, 0.000267, 0.631363], 1),
+        ([4.345000, -0.504323, 0.138134, 0.000054, 0.104656, 0.000641, 0.830466], 0),
+        ([3.713000, -0.611887, 0.208294, 0.000779, 1.380301, 0.000080, 0.106644], 0),
+        ([1.106000, -1.784251, 0.159670, 0.381279, 0.354348, 0.002476, 19.960405], 1),
+        ([0.395000, -1.962552, 0.229341, 0.074894, 0.362220, 0.924051, 0.411397], 1),
     ],
 )
 def test_model_with_various_inputs(load_model, test_input, expected):
@@ -41,7 +38,7 @@ def test_model_with_various_inputs(load_model, test_input, expected):
 
     # Преобразуем входные данные в формат numpy
     test_input_np = np.array([test_input])
-    prediction = model.predict(test_input_np)[0]  # Получаем предсказание
+    prediction = model.predict(test_input_np)  # Получаем предсказание
 
     # Отладочный вывод
     print(f"Вход: {test_input}, Предсказание: {prediction}, Ожидаемое: {expected}")
@@ -51,7 +48,6 @@ def test_model_with_various_inputs(load_model, test_input, expected):
         f"Ошибка предсказания для входа {test_input}. "
         f"Ожидалось: {expected}, Получено: {prediction}"
     )
-
 
 # Проверка метрик модели
 def test_model_metrics(load_model, test_data):
@@ -67,7 +63,6 @@ def test_model_metrics(load_model, test_data):
 
     # Проверяем метрику MSE как пример
     assert mse < 0.1, f"Слишком большое значение MSE: {mse}"
-
 
 # Дополнительный тест для проверки фикстуры test_data
 def test_data_fixture(test_data):
