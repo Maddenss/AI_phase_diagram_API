@@ -21,4 +21,4 @@ def test_regression_predictions():
     # Проверяем, что предсказания не изменились
     assert np.array_equal(current_predictions, np.array(expected_predictions)), "Предсказания изменились!"
 
-    print("Регрессионный тест пройден: предсказания модели не изменились.")
+    print("\nРегрессионный тест пройден: предсказания модели не изменились.")
