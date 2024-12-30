@@ -3,12 +3,13 @@ import pandas as pd
 from main import load_data, load_model
 import numpy as np
 
+data_path = os.path.abspath("main_data.csv")
 def test_load_data():
     """
     Проверка корректности загрузки данных.
     """
     # Загружаем данные
-    X, y = load_data("tests/main_data.csv")
+    X, y = load_data(data_path)
     
     # Проверяем, что X — это DataFrame, а y — Series
     assert isinstance(X, pd.DataFrame)
@@ -53,7 +54,7 @@ def test_predict():
     """
     # Загружаем модель и данные
     model = load_model("xgboost_model.pkl")
-    X, _ = load_data("main_data.csv")
+    X, _ = load_data(data_path)
     
     # Получаем предсказания
     predictions = model.predict(X)
