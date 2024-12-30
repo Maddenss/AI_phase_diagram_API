@@ -2,6 +2,7 @@ import pytest
 import pandas as pd
 from main import load_data, load_model
 import numpy as np
+import os
 
 data_path = os.path.abspath("main_data.csv")
 def test_load_data():
