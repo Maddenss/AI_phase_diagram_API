@@ -8,12 +8,14 @@ from sklearn.metrics import mean_squared_error
 MODEL_PATH = "xgboost_model.pkl"
 DATA_PATH = "Main_Data.csv"
 
+
 # Фикстура для загрузки модели
 @pytest.fixture
 def load_model():
     with open(MODEL_PATH, "rb") as f:
         model = pickle.load(f)
     return model
+
 
 # Фикстура для загрузки тестовых данных
 @pytest.fixture
@@ -22,6 +24,7 @@ def test_data():
     X = data[["T", "E", "C", "FM", "Xfm", "AFM", "Xafm"]]
     y = data["h"]
     return X, y
+
 
 # Параметризованный тест: проверка работы модели на разных входных данных
 @pytest.mark.parametrize(
@@ -49,6 +52,7 @@ def test_model_with_various_inputs(load_model, test_input, expected):
         f"Ожидалось: {expected}, Получено: {prediction}"
     )
 
+
 # Проверка метрик модели
 def test_model_metrics(load_model, test_data):
     model = load_model
@@ -63,6 +67,7 @@ def test_model_metrics(load_model, test_data):
 
     # Проверяем метрику MSE как пример
     assert mse < 0.1, f"Слишком большое значение MSE: {mse}"
+
 
 # Дополнительный тест для проверки фикстуры test_data
 def test_data_fixture(test_data):
