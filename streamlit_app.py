@@ -5,7 +5,7 @@ import pickle
 import shap
 import matplotlib.pyplot as plt
 import time
-from sklearn.model_selection import train_test_split, StratifiedKFold, cross_val_score
+from sklearn.model_selection import train_test_split, StratifiedKFold
 from sklearn.metrics import (
     accuracy_score,
     precision_score,
@@ -20,6 +20,7 @@ from sklearn.metrics import (
 MODEL_PATH = "xgboost_model.pkl"
 DATA_PATH = "Main_Data.csv"
 
+
 # Загрузка данных
 @st.cache_data
 def load_data(data_path):
@@ -28,11 +29,13 @@ def load_data(data_path):
     y = data["h"]
     return X, y
 
+
 # Загрузка модели
 @st.cache_data
 def load_model(model_path):
     with open(model_path, "rb") as file:
         return pickle.load(file)
+
 
 # Инициализация
 X, y = load_data(DATA_PATH)
