@@ -5,7 +5,7 @@ from main import app
 import time
 from statistics import mean
 
-# Интеграционные тесты для проверки стабильности системы
+# Нагрузочный тест для проверки стабильности системы и расчета времени отклика
 client = TestClient(app)
 
 def test_stability_with_multiple_requests():
@@ -25,5 +25,5 @@ def test_stability_with_multiple_requests():
     avg_time = mean(time_list)
 
     # Выводим информацию о тесте
-    print("\nИнтеграционный тест: система стабильна при многократных запросах.")
+    print("\nНагрузочный тест: система стабильна при многократных запросах.")
     print("Среднее время отклика: " + str(avg_time))    
