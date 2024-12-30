@@ -15,6 +15,9 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2  # Клонируем репозиторий в контейнер
+        
+      - name: Set up PYTHONPATH
+        run: echo "PYTHONPATH=$(pwd)" >> $GITHUB_ENV
 
       - name: Set up Python
         uses: actions/setup-python@v4
