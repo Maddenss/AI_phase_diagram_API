@@ -33,7 +33,7 @@ jobs:
       #    flake8 .
 
       - name: Run tests
-        run: pytest -s --disable-warnings -q tests/
+        run: pytest -s --disable-warnings -q #tests/
 
 
       - name: Upload test results (optional)
