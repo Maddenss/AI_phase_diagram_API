@@ -24,7 +24,7 @@ app = FastAPI()
 
 # Пути к файлам модели и данных
 MODEL_PATH = "xgboost_model.pkl"
-DATA_PATH = "Main_Data.csv"
+DATA_PATH = "main_data.csv"
 
 # Загрузка данных
 def load_data(data_path):
