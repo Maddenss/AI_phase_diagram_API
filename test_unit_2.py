@@ -3,13 +3,10 @@ import pandas as pd
 from main import load_data
 import os
 
-# Указываем путь к файлу
-DATA_PATH = "Main_Data.csv"
-
 @pytest.fixture
 def loaded_data():
     """Фикстура для загрузки данных."""
-    X, y = load_data(DATA_PATH)
+    X, y = load_data("Main_Data.csv")
     return X, y
 
 def test_load_data(loaded_data):
