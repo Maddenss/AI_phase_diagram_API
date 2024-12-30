@@ -1,7 +1,6 @@
 import pytest
 import pandas as pd
 from main import load_data
-import os
 
 @pytest.fixture
 def loaded_data():
