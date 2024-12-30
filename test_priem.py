@@ -35,7 +35,7 @@ def test_predict():
 
     # Удаляем тестовый файл
     os.remove(test_file)
-
+    print("\nПриемочный тест пройден: предсказания модели совпали.")
 # Тестирование некорректного ввода
 def test_predict_invalid_file():
     response = client.post("/predict/", files={"file": ("test.txt", b"Invalid content", "text/plain")})
